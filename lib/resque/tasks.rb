@@ -36,4 +36,11 @@ namespace :resque do
 
     threads.each { |thread| thread.join }
   end
+
+  desc "Start Resque Scheduler"
+  task :scheduler => :setup do
+    require 'resque'
+
+    Resque::Scheduler.run
+  end
 end

@@ -167,6 +167,19 @@ module Resque
       stats.join "\n"
     end
 
+    get "/schedule" do
+      show :schedule
+    end
+
+    post "/schedule/requeue" do
+      require 'pp'
+      pp params
+
+      config = Resque.schedule[params['job_name']]
+      Resque::Scheduler.enqueue_from_config(config)
+      redirect url("/queues")
+    end
+
     def resque
       Resque
     end
