@@ -380,6 +380,48 @@ If your workers remain idle for too long they may lose their MySQL
 connection. If that happens we recommend using [this
 Gist](http://gist.github.com/238999).
 
+Scheduler
+----------
+
+The scheduler is another rake task that runs forever.
+
+Starting the scheduler is like starting workers
+
+    $ rake resque:scheduler
+
+
+You will need to take the same step for the scheduler as you do for the workers:
+
+    task "resque:setup" => :environment
+
+You probably want to setup your scheduler config in your resque initializer:
+
+    Resque.schedule = YAML.load_file(File.join(File.dirname(__FILE__), '../resque_schedule.yml'))
+
+where resque_schedule.yml looks something like this:
+
+    queue_documents_for_indexing:
+      cron: "0 0 * * *"
+      class: QueueDocuments
+      args: 
+      description: "This job queues all content for indexing in solr"
+
+    clear_leaderboards_contributors:
+      cron: "30 6 * * 1"
+      class: ClearLeaderboards
+      args: contributors
+      description: "This job resets the weekly leaderboard for contributions"
+
+    clear_leaderboards_moderator:
+      cron: "30 6 * * 1"
+      class: ClearLeaderboards
+      args: moderators
+      description: "This job resets the weekly leaderboard for moderators"
+
+
+You can view the schedule and manually queue jobs from the "Schedule" section
+of resque-web.
+
 
 The Front End
 -------------
