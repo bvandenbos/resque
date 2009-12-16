@@ -390,7 +390,8 @@ Starting the scheduler is like starting workers
     $ rake resque:scheduler
 
 
-You will need to take the same step for the scheduler as you do for the workers:
+You will need to take the same setup step for the scheduler as you do for the
+workers:
 
     task "resque:setup" => :environment
 
